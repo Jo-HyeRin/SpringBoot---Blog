@@ -14,6 +14,9 @@
 	   (
 	   select count(*) totalCount, ceil(count(*)/3) totalPage, #{page} currentPage, 0 first, 0 last
 	   FROM boards
+	   <if test="keyword != null">
+	   ﻿		WHERE title like '%'||#{keyword}||'%'
+	   </if>
 	   )
 	</select>
 	
@@ -28,6 +31,16 @@
 		WHERE id=#{id}
 	</select>
 	
+	<select id="findSearch" resultType="site.metacoding.red.web.dto.response.boards.MainDto">
+		SELECT b.id, b.title, u.username
+		FROM boards b
+		INNER JOIN users u
+		ON b.usersId = u.id
+		﻿WHERE title like '%'||#{keyword}||'%'
+		ORDER BY b.id DESC
+		OFFSET #{startNum} ROWS FETCH NEXT 3 ROWS ONLY
+	</select>
+	
 	<select id="findAll" resultType="site.metacoding.red.web.dto.response.boards.MainDto">
 		SELECT b.id, b.title, u.username
 		FROM boards b
@@ -38,7 +51,7 @@
 	</select>
 	
 	<update id="update">
-	
+		UPDATE boards SET title=#{title}, content=#{content} WHERE id=#{id}
 	</update>
 	
 	<delete id="delete">
