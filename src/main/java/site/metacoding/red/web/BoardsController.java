@@ -81,7 +81,7 @@ public class BoardsController {
 	}
 	
 	
-	@PostMapping("/boards/{id}/delete")
+	@GetMapping("/boards/{id}/delete")
 	public String deleteBoards(@PathVariable Integer id) { // 트랜잭션때문에 영속화가 좋음
 		Users principal = (Users) session.getAttribute("principal");
 		Boards boardsPS = boardsDao.findById(id);
@@ -140,16 +140,19 @@ public class BoardsController {
 		}
 		int startNum = page*3;
 		
+		System.out.println("===============");
+		System.out.println("keyword : "+keyword);
+		System.out.println("startNum : "+startNum );
+		System.out.println("===============");
 		if(keyword == null || keyword.isEmpty()) { // keyword 가 없으면 검색 안 된 전체 데이터
 			List<MainDto> boardsList = boardsDao.findAll(startNum);
-			PagingDto paging = boardsDao.paging(page, null);
-			
+			PagingDto paging = boardsDao.paging(page, null);			
 			paging.makeBlockInfo(keyword);
 			
 			model.addAttribute("boardsList", boardsList);
 			model.addAttribute("paging",paging);
-			return "boards/main";	
 		} else { // keyword가 있으면 검색된 데이터
+			System.out.println("else 타니? --------------------");
 			List<MainDto> boardsList = boardsDao.findSearch(startNum, keyword);
 			PagingDto paging = boardsDao.paging(page, keyword);
 			paging.makeBlockInfo(keyword);

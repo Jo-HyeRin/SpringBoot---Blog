@@ -12,7 +12,7 @@ public interface BoardsDao {
 	public PagingDto paging(@Param("page") Integer page, @Param("keyword") String keyword);
 	public void insert(Boards boards); // DTO 생각해보기
 	public Boards findById(Integer id);
-	public List<MainDto> findAll(int startNum);
+	public List<MainDto> findAll(@Param("startNum") int startNum);
 	public void update(Boards boards); // dto에 id가 없으므로 dto를 넣을 수 없네. 영속화변경수정해보자
 	public void delete(Integer id);
 }
